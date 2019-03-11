@@ -15,6 +15,7 @@ class TaskController extends Controller
     public function index()
     {
         //
+        return response()->json(Task::all());
     }
 
     /**
@@ -35,7 +36,12 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $task = [
+            'title' => $request->title,
+            'isCompleted' => $request->isCompleted
+        ];
+        Task::create($task);
+        return response()->json($task);
     }
 
     /**
@@ -70,6 +76,12 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         //
+        $data = [
+            'title' => $request->title,
+            'isCompleted' =>$request->isCompleted
+        ];
+        $response = $task->save($data);
+        return response()->json($response);
     }
 
     /**
@@ -80,6 +92,10 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        if($task->delete()){
+            return response()->json(['success'=>1 ,'message'=> 'Record Deleted Successfully!' ]);
+        }else{
+            return response()->json(['success'=>0 ,'message'=> 'Error Deleting Record']);
+        }
     }
 }
